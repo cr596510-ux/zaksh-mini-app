@@ -22,6 +22,7 @@ import {
 import { getWallet } from "./walletService.js";
 import { createWithdrawal } from "./withdrawalService.js";
 import { seedTasks } from "./taskSeed.js";
+import { rateLimit } from "./rateLimit.js";
 
 const PORT = Number(process.env.PORT) || 3000;
 
@@ -82,6 +83,28 @@ async function handleRequest(req, res) {
   );
 
   const pathname = requestUrl.pathname;
+
+  const rateKey =
+    req.headers["x-forwarded-for"] ||
+    req.socket.remoteAddress ||
+    "unknown";
+
+  const limit = rateLimit(String(rateKey));
+
+  if (!limit.allowed) {
+    res.setHeader(
+      "Retry-After",
+      String(limit.retryAfterSeconds)
+    );
+
+    sendJson(res, 429, {
+      ok: false,
+      error: "Too many requests.",
+      retryAfterSeconds: limit.retryAfterSeconds
+    });
+
+    return;
+  }
 
   if (req.method === "GET" && pathname === "/health") {
     sendJson(res, 200, {
