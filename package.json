@@ -1,0 +1,13 @@
+{
+  "name": "zaksh-mini-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ZAKSH Telegram Mini App backend",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
