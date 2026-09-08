@@ -1,554 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
+<meta charset="UTF-8">
 
-  <title>ZAKSH Mining</title>
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<meta name="theme-color" content="#080b14">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<title>ZAKSH Mining</title>
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #0b0f17;
-      color: #ffffff;
-      min-height: 100vh;
-      padding-bottom: 90px;
-    }
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    button {
-      font: inherit;
-    }
+<style>
 
-    .app {
-      width: 100%;
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 18px 16px;
-    }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 22px;
-    }
+:root {
+  --bg: #080b14;
+  --panel: #101522;
+  --panel2: #151b2a;
+  --border: #252d40;
+  --text: #ffffff;
+  --muted: #8993aa;
+  --purple: #8b5cf6;
+  --purple-dark: #6d3df5;
+  --green: #22c55e;
+  --red: #ef4444;
+}
 
-    .brand {
-      font-size: 22px;
-      font-weight: 800;
-    }
+html,
+body {
+  min-height: 100%;
+  background: var(--bg);
+}
 
-    .status {
-      font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 20px;
-      background: #182130;
-      color: #8fa3bd;
-    }
+body {
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  padding-bottom: 90px;
+}
 
-    .balance-card {
-      background: #121927;
-      border: 1px solid #202b3c;
-      border-radius: 20px;
-      padding: 22px;
-      margin-bottom: 16px;
-    }
+button {
+  font: inherit;
+}
 
-    .balance-label {
-      color: #8fa3bd;
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
+button:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
 
-    .balance {
-      font-size: 36px;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
+.app {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 16px;
+}
 
-    .token {
-      color: #8fa3bd;
-      font-size: 14px;
-      margin-top: 5px;
-    }
+/* TOP BAR */
 
-    .mining-card {
-      background: #121927;
-      border: 1px solid #202b3c;
-      border-radius: 20px;
-      padding: 22px;
-      margin-bottom: 16px;
-      text-align: center;
-    }
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
 
-    .mining-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 21px;
+  font-weight: 900;
+}
 
-    .mining-info {
-      color: #8fa3bd;
-      font-size: 13px;
-      line-height: 1.5;
-      margin-bottom: 18px;
-    }
+.logo-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(
+    145deg,
+    #9b6cff,
+    #4c1d95
+  );
+  box-shadow:
+    0 8px 28px rgba(139, 92, 246, .25);
+}
 
-    .mine-button {
-      width: 100%;
-      border: 0;
-      border-radius: 14px;
-      padding: 15px;
-      background: #ffffff;
-      color: #0b0f17;
-      font-weight: 800;
-      cursor: pointer;
-    }
+.status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border-radius: 30px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+}
 
-    .mine-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f59e0b;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+/* PAGES */
 
-    .card {
-      background: #121927;
-      border: 1px solid #202b3c;
-      border-radius: 18px;
-      padding: 18px;
-      cursor: pointer;
-    }
+.page {
+  display: none;
+}
 
-    .card-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 7px;
-    }
+.page.active {
+  display: block;
+}
 
-    .card-text {
-      color: #8fa3bd;
-      font-size: 12px;
-      line-height: 1.4;
-    }
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4px 2px 16px;
+}
 
-    .message {
-      margin-top: 16px;
-      padding: 13px;
-      border-radius: 12px;
-      background: #121927;
-      color: #8fa3bd;
-      font-size: 13px;
-      display: none;
-    }
+.page-title {
+  font-size: 25px;
+  font-weight: 900;
+}
 
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 72px;
-      background: #0e141f;
-      border-top: 1px solid #202b3c;
-      display: flex;
-      justify-content: center;
-      z-index: 10;
-    }
+.refresh {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--panel);
+  color: #fff;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
 
-    .nav-inner {
-      width: 100%;
-      max-width: 520px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-    }
+/* HERO */
 
-    .nav-button {
-      border: 0;
-      background: transparent;
-      color: #718198;
-      cursor: pointer;
-      font-size: 11px;
-      padding: 8px 2px;
-    }
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  margin-bottom: 14px;
+  border-radius: 24px;
+  border: 1px solid var(--border);
 
-    .nav-button.active {
-      color: #ffffff;
-    }
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(139, 92, 246, .25),
+      transparent 36%
+    ),
+    linear-gradient(
+      145deg,
+      #151b2b,
+      #0e1320
+    );
+}
 
-    .nav-icon {
-      display: block;
-      font-size: 20px;
-      margin-bottom: 4px;
-    }
+.hero-label {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
 
-    .section {
-      display: none;
-    }
+.hero-balance {
+  font-size: 40px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
 
-    .section.active {
-      display: block;
-    }
+.token {
+  color: #aab4c8;
+  font-size: 13px;
+  margin-top: 6px;
+}
 
-    .section-title {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
 
-    .task {
-      background: #121927;
-      border: 1px solid #202b3c;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 12px;
-    }
+.stat {
+  padding: 13px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.07);
+}
 
-    .task-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-    }
+.stat-label {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 5px;
+}
 
-    .task-name {
-      font-weight: 700;
-    }
+.stat-value {
+  font-size: 15px;
+  font-weight: 800;
+}
 
-    .task-reward {
-      font-size: 12px;
-      color: #8fa3bd;
-      white-space: nowrap;
-    }
+/* CARDS */
 
-    .task-description {
-      color: #8fa3bd;
-      font-size: 12px;
-      margin: 8px 0 14px;
-    }
+.card {
+  padding: 18px;
+  margin-bottom: 14px;
+  border-radius: 20px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
 
-    .task-button {
-      width: 100%;
-      border: 0;
-      border-radius: 11px;
-      padding: 11px;
-      background: #202b3c;
-      color: #ffffff;
-      cursor: pointer;
-    }
-  </style>
+.mining-card {
+  text-align: center;
+  padding: 24px 18px;
+}
+
+.mining-orb {
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  font-size: 30px;
+
+  background:
+    radial-gradient(
+      circle,
+      #b9a0ff 0 12%,
+      #7c3aed 13% 37%,
+      #32116b 38% 65%,
+      #17132c 66%
+    );
+
+  box-shadow:
+    0 0 0 8px rgba(139,92,246,.08),
+    0 0 45px rgba(139,92,246,.25);
+}
+
+.mining-title {
+  font-size: 20px;
+  font-weight: 900;
+  margin-bottom: 7px;
+}
+
+.mining-subtitle {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.primary {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 14px;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--purple),
+      var(--purple-dark)
+    );
+
+  box-shadow:
+    0 10px 25px rgba(109,61,245,.22);
+}
+
+.primary:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
+}
+
+.quick {
+  min-height: 104px;
+  padding: 16px;
+  text-align: left;
+  color: #fff;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  cursor: pointer;
+}
+
+.quick-icon {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.quick-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+
+.quick-text {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* MESSAGE */
+
+.message {
+  display: none;
+  padding: 12px 14px;
+  margin-bottom: 13px;
+  border-radius: 13px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: #cbd3e1;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.message.show {
+  display: block;
+}
+
+.message.error {
+  color: #fecaca;
+  border-color: rgba(239,68,68,.45);
+}
+
+.loading {
+  padding: 25px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+</style>
 </head>
 
 <body>
 
-  <main class="app">
+<main class="app">
 
-    <header class="header">
-      <div class="brand">ZAKSH Mining</div>
-      <div class="status" id="connectionStatus">
-        Connecting...
-      </div>
-    </header>
+<header class="topbar">
 
-    <section id="homeSection" class="section active">
+  <div class="logo">
 
-      <div class="balance-card">
-        <div class="balance-label">Your Balance</div>
-        <div class="balance" id="balance">
-          0
-        </div>
-        <div class="token">ZKO</div>
-      </div>
-
-      <div class="mining-card">
-        <div class="mining-title">
-          ZKO Mining
-        </div>
-
-        <div class="mining-info">
-          Start a mining session and earn ZKO rewards.
-        </div>
-
-        <button
-          id="mineButton"
-          class="mine-button"
-          type="button"
-        >
-          Start Mining
-        </button>
-      </div>
-
-      <div class="grid">
-
-        <div
-          class="card"
-          onclick="showSection('tasksSection')"
-        >
-          <div class="card-title">📋 Tasks</div>
-          <div class="card-text">
-            Complete tasks and earn ZKO.
-          </div>
-        </div>
-
-        <div
-          class="card"
-          onclick="showSection('referralSection')"
-        >
-          <div class="card-title">👥 Referral</div>
-          <div class="card-text">
-            Invite friends and earn rewards.
-          </div>
-        </div>
-
-        <div
-          class="card"
-          onclick="showSection('walletSection')"
-        >
-          <div class="card-title">💰 Wallet</div>
-          <div class="card-text">
-            View your ZKO balance.
-          </div>
-        </div>
-
-        <div
-          class="card"
-          onclick="showSection('profileSection')"
-        >
-          <div class="card-title">👤 Profile</div>
-          <div class="card-text">
-            View your account.
-          </div>
-        </div>
-
-      </div>
-
-      <div
-        id="message"
-        class="message"
-      ></div>
-
-    </section>
-
-    <section id="tasksSection" class="section">
-
-      <div class="section-title">
-        Tasks
-      </div>
-
-      <div id="tasksList">
-        <div class="task">
-          Loading tasks...
-        </div>
-      </div>
-
-    </section>
-
-    <section id="referralSection" class="section">
-
-      <div class="section-title">
-        Referral
-      </div>
-
-      <div class="balance-card">
-        <div class="balance-label">
-          Invited Users
-        </div>
-
-        <div
-          class="balance"
-          id="referralCount"
-        >
-          0
-        </div>
-
-        <div class="token">
-          Invite friends and earn ZKO.
-        </div>
-      </div>
-
-    </section>
-
-    <section id="walletSection" class="section">
-
-      <div class="section-title">
-        Wallet
-      </div>
-
-      <div class="balance-card">
-        <div class="balance-label">
-          Available Balance
-        </div>
-
-        <div
-          class="balance"
-          id="walletBalance"
-        >
-          0
-        </div>
-
-        <div class="token">
-          ZKO
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">
-          Withdrawals
-        </div>
-
-        <div class="card-text">
-          Withdrawals are locked until
-          5 January 2027.
-        </div>
-      </div>
-
-    </section>
-
-    <section id="profileSection" class="section">
-
-      <div class="section-title">
-        Profile
-      </div>
-
-      <div class="balance-card">
-
-        <div class="balance-label">
-          Telegram User
-        </div>
-
-        <div
-          class="balance"
-          id="profileName"
-          style="font-size:24px;"
-        >
-          Loading...
-        </div>
-
-        <div
-          class="token"
-          id="profileUsername"
-        ></div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-  <nav class="bottom-nav">
-
-    <div class="nav-inner">
-
-      <button
-        class="nav-button active"
-        type="button"
-        onclick="showSection('homeSection', this)"
-      >
-        <span class="nav-icon">⛏️</span>
-        Mining
-      </button>
-
-      <button
-        class="nav-button"
-        type="button"
-        onclick="showSection('tasksSection', this)"
-      >
-        <span class="nav-icon">📋</span>
-        Tasks
-      </button>
-
-      <button
-        class="nav-button"
-        type="button"
-        onclick="showSection('walletSection', this)"
-      >
-        <span class="nav-icon">💰</span>
-        Wallet
-      </button>
-
-      <button
-        class="nav-button"
-        type="button"
-        onclick="showSection('profileSection', this)"
-      >
-        <span class="nav-icon">👤</span>
-        Profile
-      </button>
-
+    <div class="logo-mark">
+      Z
     </div>
 
-  </nav>
+    <span>
+      ZAKSH
+    </span>
 
-  <script>
-    const tg = window.Telegram?.WebApp;
+  </div>
 
-    if (tg) {
-      tg.ready();
-      tg.expand();
+  <div class="status">
 
-      document.getElementById(
-        "connectionStatus"
-      ).textContent = "Telegram Connected";
-    } else {
-      document.getElementById(
-        "connectionStatus"
-      ).textContent = "Browser Mode";
-    }
+    <span
+      class="status-dot"
+      id="statusDot"
+    ></span>
 
-    function showSection(sectionId, button) {
-      document
-        .querySelectorAll(".section")
-        .forEach(section => {
-          section.classList.remove("active");
-        });
+    <span id="connectionStatus">
+      Connecting
+    </span>
 
-      const section =
-        document.getElementById(sectionId);
+  </div>
 
-      if (section) {
-        section.classList.add("active");
-      }
+</header>
 
-      document
-        .querySelectorAll(".nav-button")
-        .forEach(nav => {
-          nav.classList.remove("active");
-        });
-
-      if (button) {
-        button.classList.add("active");
-      }
-    }
-
-    function showMessage(message) {
-      const element =
-        document.getElementById("message");
-
-      element.textContent = message;
-      element.style.display = "block";
-    }
-
-    document
-      .getElementById("mineButton")
-      .addEventListener("click", () => {
-        showMessage(
-          "Mining API will be connected in the next step."
-        );
-      });
-  </script>
-
-</body>
-</html>
+<div
+  id="message"
+  class="message"
+></div>
